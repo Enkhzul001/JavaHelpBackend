@@ -1,0 +1,20 @@
+*.class
+.gradle
+/build/
+/bin/
+/.settings/
+.project
+.classpath
+
+# Package Files
+*.jar
+*.war
+*.ear
+
+# Serverless directories
+.serverless
+
+# Node
+node_modules
+
+!/gradle/wrapper/gradle-wrapper.jar
