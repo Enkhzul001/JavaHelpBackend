@@ -9,6 +9,12 @@ repositories {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+sourceSets {
+    test.java.srcDirs += 'src/main/test'
+    test.resources.srcDirs += 'src/main/test'
+}
+
+
 dependencies {
     api (
         'com.amazonaws:aws-lambda-java-core:1.2.1',
@@ -17,6 +23,8 @@ dependencies {
         'com.fasterxml.jackson.core:jackson-databind:2.11.0',
         'com.fasterxml.jackson.core:jackson-annotations:2.11.0'
     )
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 }
 
 // Task for building the zip file for upload
@@ -35,6 +43,12 @@ task buildZip(type: Zip) {
     into('lib') {
         from configurations.runtimeClasspath
     }
+}
+
+test {
+    useJUnitPlatform()
+
+    dependsOn 'cleanTest'
 }
 
 build.dependsOn buildZip
