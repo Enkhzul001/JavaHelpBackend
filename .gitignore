@@ -17,4 +17,7 @@
 # Node
 node_modules
 
+#
+.vscode
+
 !/gradle/wrapper/gradle-wrapper.jar
