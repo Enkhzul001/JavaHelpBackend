@@ -1,0 +1,417 @@
+[
+  {
+    "name": "UserType",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Enum to designate a User as either a CLIENT or a PROVIDER"
+    ],
+    "collaborators": [
+      ""
+    ]
+  },
+  {
+    "name": "UserInfo",
+    "superclasses": "",
+    "subclasses": "ProviderUserInfo, ClientUserInfo",
+    "type": 2,
+    "responsibilities": [
+      "Represent the personal or professional information of a User",
+      "UserType getType(): Gets the UserType of this User"
+    ],
+    "collaborators": [
+      "UserType"
+    ]
+  },
+  {
+    "name": "ClientUserInfo",
+    "superclasses": "UserInfo",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Represent a client's personal information",
+      "String firstName: The client's first name",
+      "String lastName: The client's last name",
+      "String address: The address the client is currently living at",
+      "String phoneNumber: The client's phone number"
+    ],
+    "collaborators": [
+      "UserInfo"
+    ]
+  },
+  {
+    "name": "ProviderUserInfo",
+    "superclasses": "UserInfo",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Represent the professional information of a mental health provider",
+      "String address: The current address of the provider's practice",
+      "String phoneNumber: The phone number the provider can be contacted at",
+      "String practiceName: The display name for the practice/provider",
+      "boolean confirmed: Whether the provider has been confirmed to be a certified mental health professional"
+    ],
+    "collaborators": [
+      "UserInfo"
+    ]
+  },
+  {
+    "name": "User",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Represents the complete information of a single user",
+      "Directly responsible for storing logistic, account, and authentication information",
+      "UserInfo object stores personal or professional details used by front-facing parts of application",
+      "String id: Unique base64 String ID for this account",
+      "UserInfo userInfo: Representation of professional or personal information of some type implementing the UserInfo abstract class",
+      "byte[] salt: The salt used by this user's hash",
+      "byte[] hash: This user's hash",
+      "String getBase64SaltHash(): Gets the base64 encoded representation of this user's salted password hash with the salt appended in front "
+    ],
+    "collaborators": [
+      "UserInfo"
+    ]
+  },
+  {
+    "name": "Token",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Representation of a token on the backend",
+      "Can represent either a session token or an access token depending on expiry date",
+      "Used to authenticate requests to backend",
+      "String token: Token string to be used with requests",
+      "DateTime expiry: The expiry date for this token",
+      "DateTime issued: The issue date for this token",
+      "User user: The user this token is valid for",
+      "String tag: String tag with any additional information about this token",
+      "String id: Unique ID for this token"
+    ],
+    "collaborators": [
+      "User"
+    ]
+  },
+  {
+    "name": "IUserStore",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 3,
+    "responsibilities": [
+      "Interface acting as a specification for a data persistence gateway for User objects, specifies simple CRUD operations",
+      "User store(User u): Stores the specified user in the database as a new user. May mutate the ID of the user object if the ID is already used by another user in the user store. Returns the added user.",
+      "boolean update(User u): Updates the specified user in the database to match the provided object, return whether successful",
+      "boolean removeByID(String id): Removes the user with the specified id, return whether successful",
+      "User getByID(String id): Return the user with the specified ID or null if not found",
+      "User getFirstMatching(UserQueryConstraint u, int i): Gets the first i users matching the specified user query constraint"
+    ],
+    "collaborators": [
+      "User",
+      "UserQueryConstraint"
+    ]
+  },
+  {
+    "name": "ITokenStore",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 3,
+    "responsibilities": [
+      "Specification for a data persistence gateway for persistent token objects, specifies simple CRUD operations plus a contains predicate to determine whether a given user has a given token in the store",
+      "Token store(Token t): Stores the specified token in the store, may mutate the provided token if one with the specified ID is already present. Returns the stored token.",
+      "Token getByID(String s): Gets the token with the specified ID or null if none found",
+      "Token[] getUserTokens(User u): Gets all tokens associated with a specific user, or an empty array if no such tokens are found",
+      "Token containsMatching(String s, User u): Determines whether a valid token matching the provided token exists for the provided user. If one exists but it is invalid, removes it from the token store. Returns the matching token, or null if none exists.",
+      "boolean removeByID(String s): Remove the token with the specified ID, return whether successful",
+      "boolean update(Token t): Updates the specified token to match the provided token, returns whether successful"
+    ],
+    "collaborators": [
+      "Token",
+      "User"
+    ]
+  },
+  {
+    "name": "Survey",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Represents an unanswered survey",
+      "SurveyQuestion[] questions: An ordered list of questions on the survey"
+    ],
+    "collaborators": [
+      "SurveyQuestion"
+    ]
+  },
+  {
+    "name": "SurveyQuestion",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Representation of a single unanswered question in a survey",
+      "String question: String representation of the question"
+    ],
+    "collaborators": [
+      ""
+    ]
+  },
+  {
+    "name": "SurveyResponse",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Representation of a filled out survey",
+      "Survey baseSurvey: The base unfilled version of this survey response",
+      "SurveyQuestionResponse[] responses: Ordered array of all responses"
+    ],
+    "collaborators": [
+      "Survey",
+      "SurveyQuestionResponse"
+    ]
+  },
+  {
+    "name": "SurveyQuestionResponse",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Representation of an answered question on a survey",
+      "SurveyQuestion baseQuestion: The base unanswered question",
+      "String response: The answer to the question"
+    ],
+    "collaborators": [
+      "SurveyQuestion"
+    ]
+  },
+  {
+    "name": "ISurveyStore",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 3,
+    "responsibilities": [
+      "Interface specifying persistent data gateway for survey objects, specifies basic CRUD operations",
+      "Survey getByID(String id): Gets the survey with the specified ID, or null if none is found",
+      "Survey store(Survey s): Stores the specified survey, may need to mutate ID on a collision, returns the stored survey",
+      "boolean update(Survey s): Updates the specified survey, returns whether successful",
+      "boolean removeByID(String s): Removes the survey with the specified ID, return whether successful"
+    ],
+    "collaborators": [
+      "Survey"
+    ]
+  },
+  {
+    "name": "ISurveyResponseStore",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 3,
+    "responsibilities": [
+      "Interface specifying persistent data gateway for survey response objects, specifies basic CRUD operations",
+      "SurveyResponse getByID(String id): Gets the survey response with the specified ID, or null if none is found",
+      "SurveyResponse store(SurveyResponse s): Stores the specified survey response, may need to mutate ID on a collision, returns the stored survey response",
+      "boolean update(SurveyResponse s): Updates the specified survey response, returns whether successful",
+      "boolean removeByID(String s): Removes the survey response with the specified ID, return whether successful"
+    ],
+    "collaborators": [
+      "SurveyResponse"
+    ]
+  },
+  {
+    "name": "UserQueryConstraint",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Represents a set of constraints on a query on an IUserStore",
+      "Used to filter for matching providers",
+      "UserQueryConstraint userType(UserType t): Updates this constraint to match users of the specified type, and returns the updated constraint",
+      "UserQueryConstraint specialization(String specialization): Updates this constraint to match only providers with the specified specialization, and returns the updated constraint",
+      "UserQueryConstraint userInfoType<T extends UserInfo>(): Updates this query to match only users where their user info is assignable to the specified generic type argument and returns the updated constraint",
+      "UserQueryConstraint matches(Predicate<User> p): Updates this constraint to match only users of the specified predicate and then returns the updated constraint",
+      "UserQueryConstraint userInfoMatches(Predicate<UserInfo> p): Updates this query to match only users with user info matching the specified predicate, then returns the updated query constraint"
+    ],
+    "collaborators": [
+      "UserType"
+    ]
+  },
+  {
+    "name": "LoginManager",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Handles logging in a user and returning a session or access token",
+      "ITokenStore tokenStore: The token store to use",
+      "IUserStore userStore: The user store to use",
+      "LoginResult login(String desiredUserId, String hash, boolean stayLoggedIn): Runs the login for the desired id with the provided hash and returns result"
+    ],
+    "collaborators": [
+      "LoginResult",
+      "IUserStore",
+      "ITokenStore"
+    ]
+  },
+  {
+    "name": "LoginResult",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Result of a login interaction",
+      "boolean success: Whether the interaction was successful",
+      "String errorMessage: Error message if the interaction was not successful",
+      "Token token: The token issued if the interaction was successful",
+      "User user: The logged into user if the interaction was successful"
+    ],
+    "collaborators": [
+      "Token",
+      "User"
+    ]
+  },
+  {
+    "name": "LambdaLoginHandler",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Lambda handler function for logging in a user",
+      "LambdaLoginResponseFactory factory: The response factory to be used by this login handler",
+      "LoginManager manager: The manager to be used to generate a login response",
+      "LambdaLoginResponse handle(Event e, Context c): Handles the AWS Lambda event and generates a LambdaLoginResponse to send to the client"
+    ],
+    "collaborators": [
+      "LambdaLoginResponseFactory",
+      "LambdaLoginResponse"
+    ]
+  },
+  {
+    "name": "LoginResponseFactory<T>",
+    "superclasses": "",
+    "subclasses": "LambdaLoginResponseFactory",
+    "type": 2,
+    "responsibilities": [
+      "LoginManager manager: The login manager for this factory to use",
+      "protected abstract T createFromResult(LoginResult r): Creates a response of type T to a login request using a LoginResult",
+      "public T create(String userId, String hash, boolean stayLoggedIn): Creates a response of type T to a login request using a LoginManager by calling createFromResult on the result of the manager's login method"
+    ],
+    "collaborators": [
+      "LoginResult",
+      "LoginManager"
+    ]
+  },
+  {
+    "name": "LambdaLoginResponse",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "POJO for responding to login requests via AWS Lambda"
+    ],
+    "collaborators": [
+      ""
+    ]
+  },
+  {
+    "name": "LambdaLoginResponseFactory",
+    "superclasses": "ILoginResponseFactory<LambdaLoginResponse>",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "protected LambdaLoginResponse createFromResult(LoginResult r): Creates a LambdaLoginResponse from a LoginResult"
+    ],
+    "collaborators": [
+      "LambdaLoginResponse",
+      "LoginResult",
+      "LoginResponseFactory<LambdaLoginResponse>"
+    ]
+  },
+  {
+    "name": "TokenAuthManager",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Authenticates tokens",
+      "IUserStore userStore: User store to use",
+      "ITokenStore tokenStore: Token store to use",
+      "TokenAuthResult authenticate(String desiredUserId, String token): Authenticates a token for a user and returns the result"
+    ],
+    "collaborators": [
+      "IUserStore",
+      "ITokenStore",
+      "TokenAuthResult"
+    ]
+  },
+  {
+    "name": "TokenAuthResult",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "POJO with results of a token authentication",
+      "boolean authenticated: Whether the token authenticated",
+      "User user: The user the token authenticated for",
+      "Token token: The token that authenticated",
+      "String errorMessage: Error message if the token failed to authenticate"
+    ],
+    "collaborators": [
+      ""
+    ]
+  },
+  {
+    "name": "SaltManager",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "Retrieves a user's salt",
+      "IUserStore userStore: The user store containing the user with the salt to be retrieved",
+      "byte[] getSalt(String userId): Gets the salt of the specified user, or returns null if the specified user cannot be found"
+    ],
+    "collaborators": [
+      "IUserStore"
+    ]
+  },
+  {
+    "name": "SaltResponseFactory<T>",
+    "superclasses": "",
+    "subclasses": "LambdaSaltResponseFactory",
+    "type": 2,
+    "responsibilities": [
+      "Factory for creating salt responses of arbitrary type",
+      "SaltManager manager: The manager for this factory to use",
+      "protected abstract T createFromSalt(byte[] salt): Creates a T response from the provided salt",
+      "public T create(String userId): Uses the provided manager's getSalt method to call createFromSalt and return the result"
+    ],
+    "collaborators": [
+      "SaltManager"
+    ]
+  },
+  {
+    "name": "LambdaSaltResponse",
+    "superclasses": "",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "POJO for responding to API requests for user salt"
+    ],
+    "collaborators": [
+      ""
+    ]
+  },
+  {
+    "name": "LambdaSaltResponseFactory",
+    "superclasses": "SaltResponseFactory<LambdaSaltResponse>",
+    "subclasses": "",
+    "type": 1,
+    "responsibilities": [
+      "protected LambdaSaltResponse createFromSalt(byte[] salt): Creates a LambdaSaltResponse from the specified salt"
+    ],
+    "collaborators": [
+      "LambdaSaltResponse"
+    ]
+  }
+]
